@@ -23,6 +23,7 @@
 (define program '(p r o g r a m))
 (define of '(o f))
 (define language '(l a n g u a g e))
+(define day '(d a y))
 
 
 ;; -----------------------------------------------------
@@ -35,15 +36,52 @@
 ;; KEY FUNCTION
 
 (define key
-  (lambda (w)
-     (fold1 (lambda(char int) (+ (*33 int) (ctv char))) 5381 w)))
+
+    (lambda (w)
+      (if(null? w)
+      0
+      (+  ( * (expt 7 (length(cdr w))) ( ctv(car w)))   )
+      )))
+           
+   ;; > (expt 2 10)
+   ;;   1024
+      
+;;7^i  *  ctv(w[i])
+
+(define keys
+  (lambda(w)
+    (if(null? w)
+       0
+     (+ (* (ctv(car w)) (expt 7 (length w)))  (key (cdr w)))))
+    )
+
+
+(define keyy
+(lambda (w)
+(if (null? w)
+5381
+(+ (ctv (car w)) ( * 33 (key (cdr w)))))
+))
+
+
+(define sum 
+  (lambda (f lower upper)
+    (if (> lower upper)
+        0
+        (+ (f lower) (sum f (+ 1 lower) upper))
+    )
+  )
+)
+
+
 ;; -----------------------------------------------------
 ;; EXAMPLE KEY FUNCTIONS
 
-(define key1 (key hello))   ;; ==> 40762
+(define key1 (keys hello))   ;; ==> 40762
 (define key2 (key program)) ;; ==> 1592740
 (define key3 (key of))      ;; ==> 57
 (define key4 (key language));; ==> 5011592
+(define key5 (key day));; ==> 1236
 
 
 ;; -----------------------------------------------------
@@ -66,10 +104,10 @@
        (floor (* size(- (* key k) A) (floor (* (key k) A)))))))
 
 ;; value of parameter "size" should be a prime number
-(define gen-hash-hybrid-method
-  (lambda (size) ;; range of values: 0..size-1
-    (lambda (k)
-    (modulo   (* 2 (key k gen-hash-division-method (+ (* 3)))) size)
+;;(define gen-hash-hybrid-method
+ ;; (lambda (size) ;; range of values: 0..size-1
+  ;;  (lambda (k)
+  ;;  (modulo   (* 2 (key k gen-hash-division-method (+ (* 3)))) size)
 
 ;; H hybrid(K) = 2 * H division(k) + 3 * H multiplication(k)) mod size
 
@@ -81,12 +119,12 @@
 
 ;; ideally, size should be a prime number for division and hybrid methods
 
-(define hash-1 (gen-hash-division-method 454711))
-(define hash-2 (gen-hash-division-method 1297687))
-(define hash-3 (gen-hash-multiplication-method 90000))
-(define hash-4 (gen-hash-multiplication-method 180001))
-(define hash-5 (gen-hash-hybrid-method 454711))
-(define hash-6 (gen-hash-hybrid-method 1298687))
+;;(define hash-1 (gen-hash-division-method 454711))
+;;(define hash-2 (gen-hash-division-method 1297687))
+;;(define hash-3 (gen-hash-multiplication-method 90000))
+;;(define hash-4 (gen-hash-multiplication-method 180001))
+;;(define hash-5 (gen-hash-hybrid-method 454711))
+;;(define hash-6 (gen-hash-hybrid-method 1298687))
 
 ;; (hash-1 hello) ;; ==> 40762
 ;; (hash-2 hello) ;; ==> 40762
@@ -114,26 +152,26 @@
 ;; -----------------------------------------------------
 ;; EXAMPLE HASH FUNCTION LISTS
 
-(define hashfl-1 (list hash-1 hash-2 hash-3 hash-4))
-(define hashfl-2 (list hash-1 hash-3))
-(define hashfl-3 (list hash-1 hash-4 hash-5 hash-6))
+;;(define hashfl-1 (list hash-1 hash-2 hash-3 hash-4))
+;;(define hashfl-2 (list hash-1 hash-3))
+;;(define hashfl-3 (list hash-1 hash-4 hash-5 hash-6))
 
 
 ;; -----------------------------------------------------
 ;; SPELL CHECKER GENERATOR
 
-(define gen-checker
-  (lambda (hashfunctionlist dict)
-     'SOME_CODE_GOES_HERE ;; *** FUNCTION BODY IS MISSING ***
-))
+;;(define gen-checker
+ ;; (lambda (hashfunctionlist dict)
+  ;;   'SOME_CODE_GOES_HERE ;; *** FUNCTION BODY IS MISSING ***
+;;))
 
 
 ;; -----------------------------------------------------
 ;; EXAMPLE SPELL CHECKERS
 
-(define checker-1 (gen-checker hashfl-1 dictionary))
-(define checker-2 (gen-checker hashfl-2 dictionary))
-(define checker-3 (gen-checker hashfl-3 dictionary))
+;;(define checker-1 (gen-checker hashfl-1 dictionary))
+;;(define checker-2 (gen-checker hashfl-2 dictionary))
+;;(define checker-3 (gen-checker hashfl-3 dictionary))
 
 
 
