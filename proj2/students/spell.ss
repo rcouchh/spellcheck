@@ -52,8 +52,10 @@
   (lambda(w)
     (if(null? w)
        0
-     (+ (* (ctv(car w)) (expt 7 (length w)))  (key (cdr w)))))
+     (+ (* (ctv(car w)) (expt 7 (length w)))  (keys (cdr w)))))
     )
+
+
 
 
 (define keyy
@@ -77,7 +79,7 @@
 ;; -----------------------------------------------------
 ;; EXAMPLE KEY FUNCTIONS
 
-(define key1 (keys hello))   ;; ==> 40762
+(define key1 (key hello))   ;; ==> 40762
 (define key2 (key program)) ;; ==> 1592740
 (define key3 (key of))      ;; ==> 57
 (define key4 (key language));; ==> 5011592
@@ -104,12 +106,11 @@
        (floor (* size(- (* key k) A) (floor (* (key k) A)))))))
 
 ;; value of parameter "size" should be a prime number
-;;(define gen-hash-hybrid-method
- ;; (lambda (size) ;; range of values: 0..size-1
-  ;;  (lambda (k)
-  ;;  (modulo   (* 2 (key k gen-hash-division-method (+ (* 3)))) size)
+(define gen-hash-hybrid-method
+  (lambda (size) ;; range of values: 0..size-1
+    (lambda (k)
+     (modulo (+ (* 2 gen-hash-division-method key k) (* 3 gen-hash-multiplication-method key k)) size)
 
-;; H hybrid(K) = 2 * H division(k) + 3 * H multiplication(k)) mod size
 
 ;; -----------------------------------------------------
 ;; EXAMPLE HASH FUNCTIONS AND HASH FUNCTION LISTS
@@ -119,12 +120,12 @@
 
 ;; ideally, size should be a prime number for division and hybrid methods
 
-;;(define hash-1 (gen-hash-division-method 454711))
-;;(define hash-2 (gen-hash-division-method 1297687))
-;;(define hash-3 (gen-hash-multiplication-method 90000))
-;;(define hash-4 (gen-hash-multiplication-method 180001))
-;;(define hash-5 (gen-hash-hybrid-method 454711))
-;;(define hash-6 (gen-hash-hybrid-method 1298687))
+(define hash-1 (gen-hash-division-method 454711))
+(define hash-2 (gen-hash-division-method 1297687))
+(define hash-3 (gen-hash-multiplication-method 90000))
+(define hash-4 (gen-hash-multiplication-method 180001))
+(define hash-5 (gen-hash-hybrid-method 454711))
+(define hash-6 (gen-hash-hybrid-method 1298687))
 
 ;; (hash-1 hello) ;; ==> 40762
 ;; (hash-2 hello) ;; ==> 40762
