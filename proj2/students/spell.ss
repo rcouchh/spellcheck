@@ -36,45 +36,11 @@
 ;; KEY FUNCTION
 
 (define key
-
-    (lambda (w)
-      (if(null? w)
-      0
-      (+  ( * (expt 7 (length(cdr w))) ( ctv(car w)))   )
-      )))
-           
-   ;; > (expt 2 10)
-   ;;   1024
-      
-;;7^i  *  ctv(w[i])
-
-(define keys
   (lambda(w)
     (if(null? w)
        0
-     (+ (* (ctv(car w)) (expt 7 (length w)))  (keys (cdr w)))))
-    )
-
-
-
-
-(define keyy
-(lambda (w)
-(if (null? w)
-5381
-(+ (ctv (car w)) ( * 33 (key (cdr w)))))
-))
-
-
-(define sum 
-  (lambda (f lower upper)
-    (if (> lower upper)
-        0
-        (+ (f lower) (sum f (+ 1 lower) upper))
-    )
-  )
-)
-
+      (+ (ctv(car w)) (* 7 (key (cdr w))))
+    )))
 
 ;; -----------------------------------------------------
 ;; EXAMPLE KEY FUNCTIONS
@@ -83,7 +49,7 @@
 (define key2 (key program)) ;; ==> 1592740
 (define key3 (key of))      ;; ==> 57
 (define key4 (key language));; ==> 5011592
-(define key5 (key day));; ==> 1236
+(define key5 (key day))     ;; ==> 1236
 
 
 ;; -----------------------------------------------------
@@ -103,14 +69,15 @@
 (define gen-hash-multiplication-method
   (lambda (size) ;; range of values: 0..size-1
      (lambda (k)
-       (floor (* size(- (* key k) A) (floor (* (key k) A)))))))
+       (floor (* size (- (* (key k) A) (floor (* (key k) A))))))))
+
 
 ;; value of parameter "size" should be a prime number
 (define gen-hash-hybrid-method
   (lambda (size) ;; range of values: 0..size-1
     (lambda (k)
-     (modulo (+ (* 2 gen-hash-division-method key k) (* 3 gen-hash-multiplication-method key k)) size)
-
+     (modulo (+ (* 2 (modulo (key k) size)) (* 3 (floor (* size (- (* (key k) A) (floor (* (key k) A))))))) size)
+      )))
 
 ;; -----------------------------------------------------
 ;; EXAMPLE HASH FUNCTIONS AND HASH FUNCTION LISTS
@@ -153,9 +120,9 @@
 ;; -----------------------------------------------------
 ;; EXAMPLE HASH FUNCTION LISTS
 
-;;(define hashfl-1 (list hash-1 hash-2 hash-3 hash-4))
-;;(define hashfl-2 (list hash-1 hash-3))
-;;(define hashfl-3 (list hash-1 hash-4 hash-5 hash-6))
+(define hashfl-1 (list hash-1 hash-2 hash-3 hash-4))
+(define hashfl-2 (list hash-1 hash-3))
+(define hashfl-3 (list hash-1 hash-4 hash-5 hash-6))
 
 
 ;; -----------------------------------------------------
