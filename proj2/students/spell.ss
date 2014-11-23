@@ -29,7 +29,21 @@
 ;; -----------------------------------------------------
 ;; HELPER FUNCTIONS
 
-;; *** CODE FOR ANY HELPER FUNCTION GOES HERE ***
+
+(define check
+  (lambda (bitvector word)
+   (if (null? word) #t (check2 bitvector (car word)))))
+
+(define check2
+  (lambda (list el)
+    (cond ((member el list) '#t) (else '#f))
+   ))
+
+(define hashes
+  (lambda (hashlist dict)
+    (if (null? hashlist)
+      '()
+    (append (map (car hashlist) dict) (hashes (cdr hashlist) dict)))))
 
 
 ;; -----------------------------------------------------
@@ -128,18 +142,19 @@
 ;; -----------------------------------------------------
 ;; SPELL CHECKER GENERATOR
 
-;;(define gen-checker
- ;; (lambda (hashfunctionlist dict)
-  ;;   'SOME_CODE_GOES_HERE ;; *** FUNCTION BODY IS MISSING ***
-;;))
-
+(define gen-checker
+  (lambda (hashfunctionlist dict)
+    (let ((bitvector (hashes hashfunctionlist dict)))
+      (lambda (w)
+       (check bitvector (hashes hashfunctionlist (list w)))
+))))
 
 ;; -----------------------------------------------------
 ;; EXAMPLE SPELL CHECKERS
 
-;;(define checker-1 (gen-checker hashfl-1 dictionary))
-;;(define checker-2 (gen-checker hashfl-2 dictionary))
-;;(define checker-3 (gen-checker hashfl-3 dictionary))
+(define checker-1 (gen-checker hashfl-1 dictionary))
+(define checker-2 (gen-checker hashfl-2 dictionary))
+(define checker-3 (gen-checker hashfl-3 dictionary))
 
 
 
