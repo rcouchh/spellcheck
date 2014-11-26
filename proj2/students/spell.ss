@@ -29,21 +29,24 @@
 ;; -----------------------------------------------------
 ;; HELPER FUNCTIONS
 
+(define pass
+  (lambda (bitvector w)
+   (if (null? w) 
+      #t 
+   (nextpass bitvector (car w)))))
 
-(define check
-  (lambda (bitvector word)
-   (if (null? word) #t (check2 bitvector (car word)))))
-
-(define check2
+(define nextpass
   (lambda (list el)
-    (cond ((member el list) '#t) (else '#f))
+    (cond ((member el list)
+       '#t) 
+    (else '#f))
    ))
 
 (define hashes
-  (lambda (hashlist dict)
+  (lambda (hashlist dictionary)
     (if (null? hashlist)
-      '()
-    (append (map (car hashlist) dict) (hashes (cdr hashlist) dict)))))
+      '()  ;;empty set
+    (append (map (car hashlist) dictionary) (hashes (cdr hashlist) dictionary)))))
 
 
 ;; -----------------------------------------------------
@@ -71,7 +74,7 @@
 
 ;; value of parameter "size" should be a prime number
 (define gen-hash-division-method
-  (lambda (size) ;; range of values: 0..size-1
+  (lambda (size)
      (lambda (k)
        (modulo (key k) size))
 ))
@@ -81,14 +84,14 @@
 ;;       format, e.g., 17.0 for 17
 
 (define gen-hash-multiplication-method
-  (lambda (size) ;; range of values: 0..size-1
+  (lambda (size) 
      (lambda (k)
        (floor (* size (- (* (key k) A) (floor (* (key k) A))))))))
 
 
 ;; value of parameter "size" should be a prime number
 (define gen-hash-hybrid-method
-  (lambda (size) ;; range of values: 0..size-1
+  (lambda (size)
     (lambda (k)
      (modulo (+ (* 2 (modulo (key k) size)) (* 3 (floor (* size (- (* (key k) A) (floor (* (key k) A))))))) size)
       )))
@@ -143,11 +146,13 @@
 ;; SPELL CHECKER GENERATOR
 
 (define gen-checker
-  (lambda (hashfunctionlist dict)
-    (let ((bitvector (hashes hashfunctionlist dict)))
+  (lambda (hashfunctionlist dictionary)
+    (let ((bitvector (hashes hashfunctionlist dictionary)))
       (lambda (w)
-       (check bitvector (hashes hashfunctionlist (list w)))
+       (pass bitvector (hashes hashfunctionlist (list w)))
 ))))
+
+
 
 ;; -----------------------------------------------------
 ;; EXAMPLE SPELL CHECKERS
